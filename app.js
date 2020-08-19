@@ -1,12 +1,22 @@
 // Listen for submit
 
-document
-  .getElementById("loan-form")
-  .addEventListener("submit", calculateResults);
+document.getElementById("loan-form").addEventListener("submit", function (e) {
+  // Hide results
+  document.getElementById("results").style.display = "none";
+
+  // show loader
+  document.getElementById("loading").style.display = "block";
+
+  setTimeout(calculateResults, 2000);
+
+  // since it is a form submit we will prevent defaults
+  e.preventDefault();
+});
 
 // Calculate Results
 
-function calculateResults(e) {
+function calculateResults() {
+  console.log("Calculating...");
   //grab everything we need from the UI
 
   // UI Variables
@@ -30,17 +40,26 @@ function calculateResults(e) {
     monthlyPayment.value = monthly.toFixed(2);
     totalPayment.value = (monthly * calculatedPayments).toFixed(2);
     totalInterest.value = (monthly * calculatedPayments - principal).toFixed(2);
+
+    // Show results
+    document.getElementById("results").style.display = "block";
+
+    // Hide loader
+    document.getElementById("loading").style.display = "none";
   } else {
     // if this does not run true then spit out an error
     showError("Please check your numbers");
   }
-
-  // since it is a form submit we will prevent defaults
-  e.preventDefault();
 }
 
 // Show error
 function showError(error) {
+  // Show results
+  document.getElementById("results").style.display = "none";
+
+  // Hide loader
+  document.getElementById("loading").style.display = "none";
+
   // Create a div
   const errorDiv = document.createElement("div");
 
@@ -56,14 +75,13 @@ function showError(error) {
 
   // Insert error above heading
   card.insertBefore(errorDiv, heading);
-// not a good user experience to leave this error there so we need to clear it after a certain amount of time. 
-// clear error after 3 seconds
+  // not a good user experience to leave this error there so we need to clear it after a certain amount of time.
+  // clear error after 3 seconds
 
-setTimeout(clearError, 3000);
-
+  setTimeout(clearError, 3000);
 }
 
 // Clear error function
-function clearError () {
-  document.querySelector('.alert').remove();
+function clearError() {
+  document.querySelector(".alert").remove();
 }
